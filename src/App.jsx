@@ -1,11 +1,11 @@
 import './App.css'
 import {BrowserRouter as Router, Routes, Route, Link} from 'react-router-dom';
-import Home from './pages/Home';
-import AddPost from './pages/AddPost';
-import Login from './pages/Login';
 import { useState } from 'react';
 import {signOut} from 'firebase/auth';
 import {auth} from './Firebase-config';
+import Home from './pages/Home';
+import AddPost from './pages/AddPost';
+import Login from './pages/Login';
 
 
 function App() {
@@ -17,7 +17,7 @@ function App() {
     signOut(auth).then(() => {
       localStorage.clear()
       setIsAuth(false)
-      window.location.pathname
+      window.location.pathname ='/login';
     })
    };
 
@@ -25,12 +25,17 @@ function App() {
     <Router>
       <nav>
         <Link to="/">Home</Link>
-        <Link to="/addpost">Add Post</Link>
-        {!isAuth ? <Link to="/login">Login</Link> : <button onClick={signUserOut}>Log out</button>}
+        {!isAuth ? ( <Link to="/login">Login</Link> 
+        ) : ( 
+          <>
+          <Link to="/addpost">Create Post</Link>
+          <button onClick={signUserOut}>Log out</button>
+          </>
+        )}
       </nav>
       <Routes>
-        <Route path='/' element={<Home/>}/>
-        <Route path='addpost' element={<AddPost/>}/>
+        <Route path='/' element={<Home isAuth={isAuth}/>}/>
+        <Route path='addpost' element={<AddPost isAuth={isAuth}/>}/>
         <Route path='login' element={<Login setIsAuth={setIsAuth}/>}/>
       </Routes>
     </Router>
